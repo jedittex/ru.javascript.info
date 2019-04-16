@@ -1,141 +1,146 @@
 # XMLHttpRequest
 
-`XMLHttpRequest` is a built-in browser object that allows to make HTTP requests in JavaScript.
+`XMLHttpRequest` - это встроенный в броузер объект, который позволяет делать HTTP запросы в JavaScript.
 
-Despite of having the word "XML" in its name, it can operate on any data, not only in XML format. We can upload/download files, track progress and much more.
+Несмотря на наличие слова "XML" в его имени, он омжет работать с любым типом данных, не только в формате XML. Мы можем загружать файлы на сервер, скачивать с сервера и даже больше.
 
-Right now, there's another, more modern method `fetch`, that somewhat deprecates `XMLHttpRequest`.
+В данные момент сущесвует еще один, более современный способ называемый `fetch`, который отчасти делает `XMLHttpRequest` устаревшим.
 
-In modern web-development `XMLHttpRequest` may be used for three reasons:
+В современной веб-разработке `XMLHttpRequest` может быть использован по 3 причинам:
 
-1. Historical reasons: we need to support existing scripts with `XMLHttpRequest`.
-2. We need to support old browsers, and don't want polyfills (e.g. to keep scripts tiny).
-3. We need something that `fetch` can't do yet, e.g. to track upload progress.
+1. Исторические причины: необходимо поддреживать существующие скрипты использующие `XMLHttpRequest`.
+2. Необходимо поддеривать старые броузеры, и мы не хотим использовать полифилы (чтобы наши спиркты оставались небольшого размера).
+3. Необходимо то, что `fetch` еще не умеет делать. Например, отслеживать прогресс загрузки файла на сервер.
 
-Does that sound familiar? If yes, then all right, go on with `XMLHttpRequest`. Otherwise, please head on to fetch (coming soon).
+Звучит знакомо? Если да, то все в порядке, продолжай с `XMLHttpRequest`. Иначе обратить к `fetch` (скоро будет).
 
-## Basic flow
+## Основной поток
 
-XMLHttpRequest has two modes of operation: synchronous and asynchronous.
+У XMLHttpRequest есть два режима работы: синхронный и асинхронный.
 
-Let's see the asynchronous first, as it's used in the majority of cases.
+Сперва рассмотрим синхронный. Так как он используется в большинстве случаев.
 
-To do the request, we need 3 steps:
+Есть 3 шага, чтоб сделать запрос:
 
-1. Create `XMLHttpRequest`.
+1. Создаем `XMLHttpRequest`.
     ```js
     let xhr = new XMLHttpRequest(); // no arguments
     ```
 
-2. Initialize it.
+2. Инициализируем его.
     ```js
     xhr.open(method, URL, [async, user, password])
     ```
+    
+    Этот метод обычно вызывается после `new XMLHttpRequest`. Он определяет освноные параметры запроса.  
 
-    This method is usually called first after `new XMLHttpRequest`. It specifies the main parameters of the request:
+    - `method` -- метод HTTP. Обчно `"GET"` или `"POST"`.
+    - `URL` -- URL запроса.
+    - `async` -- если преднамеренно установлено в `false`, тогда запрос будет синхронный. Вернемся к этому не много позже.
+    - `user`, `password` -- логин и пароль для базовой аутентификации HTTP (если необходимо).
+    
+    Пожалуйста обратите внимание, что вызов `open`, что противоположно его имени, не открывает соединение. Он только настраивает запрос. А сетевая активность начинается после вызова `send`.
 
-    - `method` -- HTTP-method. Usually `"GET"` or `"POST"`.
-    - `URL` -- the URL to request.
-    - `async` -- if explicitly set to `false`, then the request is synchronous, we'll cover that a bit later.
-    - `user`, `password` -- login and password for basic HTTP auth (if required).
-
-    Please note that `open` call, contrary to its name, does not open the connection. It only configures the request, but the network activity only starts with the call of `send`.
-
-3. Send it out.
+3. Высылаем.
 
     ```js
     xhr.send([body])
     ```
 
-    This method opens the connection and sends the request to server. The optional `body` parameter contains the request body.
+    Это метод открывает соединение и посылает запрос к серверу. В необязательном параметре `body` можно передать тело запроса. 
 
-    Some request methods like `GET` do not have a body. And some of them like `POST` use `body` to send the data to the server. We'll see examples later.
+    Некоторые методы запроса, такие как `GET`, не именно не имеют тела. И некоторыее из них, такие как `POST`, используют `body` для отправки данных на сервер. Примеры будет приведены позже. 
 
-4. Listen to events for response.
+4. Слушаем события запроса.
 
-    These three are the most widely used:
-    - `load` -- when the result is ready, that includes HTTP errors like 404.
-    - `error` -- when the request couldn't be made, e.g. network down or invalid URL.
+    Эти три наиболее широко используемые:
+    - `load` -- когда результат, который включает ошибки HTTP, такие как 404,  - готов.
+    - `error` -- когда невозожно было выполнить запрос, например, упла сеть или URL - неверный.
     - `progress` -- triggers periodically during the download, reports how much downloaded.
+    - `progress` -- переодически срабатывает в процессе загрузки, отчитывается о том, как много загружено.
 
     ```js
     xhr.onload = function() {
-      alert(`Loaded: ${xhr.status} ${xhr.response}`);
+      alert(`Загружен: ${xhr.status} ${xhr.response}`);
     };
 
-    xhr.onerror = function() { // only triggers if the request couldn't be made at all
-      alert(`Network Error`);
+    xhr.onerror = function() { // срабатывает только если невозожно было выполнить запрос
+      alert(`Ошибка сети`);
     };
 
-    xhr.onprogress = function(event) { // triggers periodically
-      // event.loaded - how many bytes downloaded
-      // event.lengthComputable = true if the server sent Content-Length header
-      // event.total - total number of bytes (if lengthComputable)
-      alert(`Received ${event.loaded} of ${event.total}`);
+    xhr.onprogress = function(event) { // срабатывает переодически
+      // event.loaded - сколько байт загружено
+      // event.lengthComputable = true если сервер послал заголовок Content-Length
+      // event.total - общее количество байт (если lengthComputable)
+      alert(`Получено ${event.loaded} из ${event.total}`);
     };
     ```
 
 Here's a full example. The code below loads the URL at `/article/xmlhttprequest/example/load` from the server and prints the progress:
 
+Вот полный пример. Код ниже загружает URL `/article/xmlhttprequest/example/load` с сервера и показывает статус прогреса:
+
 ```js run
-// 1. Create a new XMLHttpRequest object
+// 1. Создаем новый объект XMLHttpRequest
 let xhr = new XMLHttpRequest();
 
-// 2. Configure it: GET-request for the URL /article/.../load
+// 2. Настраиваем его: GET-запрос для URL /article/.../load
 xhr.open('GET', '/article/xmlhttprequest/example/load');
 
-// 3. Send the request over the network
+// 3. Посылаем этот запро по сети
 xhr.send();
 
-// 4. This will be called after the response is received
+// 4. Это будет вызвано после получения ответа
 xhr.onload = function() {
-  if (xhr.status != 200) { // analyze HTTP status of the response
-    alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
-  } else { // show the result
-    alert(`Done, got ${xhr.response.length} bytes`); // responseText is the server
+  if (xhr.status != 200) { // исследуем HTTP статус ответа
+    alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // например, 404: Not Found
+  } else { // показать ответ
+    alert(`Готово, получаено ${xhr.response.length} байт`); // responseText - это ответ сервера
   }
 };
 
 xhr.onprogress = function(event) {
   if (event.lengthComputable) {
-    alert(`Received ${event.loaded} of ${event.total} bytes`);
+    alert(`Получено ${event.loaded} из ${event.total} байт`);
   } else {
-    alert(`Received ${event.loaded} bytes`); // no Content-Length
+    alert(`Получено ${event.loaded} байт`); // Content-Length не указан
   }
 
 };
 
 xhr.onerror = function() {
-  alert("Request failed");
+  alert("Запрос не удался");
 };
 ```
 
-Once the server has responded, we can receive the result in the following properties of the request object:
+Поскольку сервер ответил, мы можем получить результат в виде следующих свойств объекта запроса:
 
 `status`
-: HTTP status code (a number): `200`, `404`, `403` and so on, can be `0` in case of a non-HTTP failure.
+: код состояния HTTP (число): `200`, `404`, `403` и так далее, может быть `0` если ошибка не на уровне HTTP.
 
 `statusText`
-: HTTP status message (a string): usually `OK` for `200`, `Not Found` for `404`, `Forbidden` for `403` and so on.
+: сообщения состояния HTTP (строка): обычно `OK` для `200`, `Not Found` для `404`, `Forbidden` для `403` и т.д.
 
-`response` (old scripts may use `responseText`)
-: The server response.
+`response` (старые скрипты могу использовать `responseText`)
+: Ответ от серера.
 
 If we changed our mind, we can terminate the request at any time. The call to `xhr.abort()` does that:
 
-```js
-xhr.abort(); // terminate the request
-```
-
-That triggers `abort` event.
-
-We can also specify a timeout using the corresponding property:
+Если мы передумали, мы можем завершить запрос в любое время. Вызов `xhr.abort()` сделает это:
 
 ```js
-xhr.timeout = 10000; // timeout in ms, 10 seconds
+xhr.abort(); // завершить запрос
 ```
 
-If the request does not succeed within the given time, it gets canceled and `timeout` event triggers.
+В данном случае сработает событие `abort`.
+
+Также можно указать время ожидания, используя соответствующее свойство:
+
+```js
+xhr.timeout = 10000; // время ожидания указывется в ms, 10 секунд
+```
+
+Если запрос не успел отработать за отведенное время, тогда он отменяется и срабатывает событие `timeout`.
 
 ## Response Type
 
