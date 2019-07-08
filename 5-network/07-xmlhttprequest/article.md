@@ -1,6 +1,6 @@
 # XMLHttpRequest
 
-`XMLHttpRequest` - это встроенный в броузер объект, который позволяет делать HTTP запросы в JavaScript.
+`XMLHttpRequest` - это встроенный в браузер объект, который позволяет делать HTTP запросы в JavaScript.
 
 Несмотря на наличие слова "XML" в его имени, он омжет работать с любым типом данных, не только в формате XML. Мы можем загружать файлы на сервер, скачивать с сервера и даже больше.
 
@@ -9,10 +9,10 @@
 В современной веб-разработке `XMLHttpRequest` может быть использован по 3 причинам:
 
 1. Исторические причины: необходимо поддреживать существующие скрипты использующие `XMLHttpRequest`.
-2. Необходимо поддеривать старые броузеры, и мы не хотим использовать полифилы (чтобы наши спиркты оставались небольшого размера).
+2. Необходимо поддеривать старые браузеры, и мы не хотим использовать полифилы (чтобы наши спиркты оставались небольшого размера).
 3. Необходимо то, что `fetch` еще не умеет делать. Например, отслеживать прогресс загрузки файла на сервер.
 
-Звучит знакомо? Если да, то все в порядке, продолжай с `XMLHttpRequest`. Иначе обратить к `fetch` (скоро будет).
+Звучит знакомо? Если да, то все в порядке, продолжай с `XMLHttpRequest`. Иначе обратитесь к `fetch` (скоро будет).
 
 ## Основной поток
 
@@ -24,7 +24,7 @@
 
 1. Создаем `XMLHttpRequest`.
     ```js
-    let xhr = new XMLHttpRequest(); // no arguments
+    let xhr = new XMLHttpRequest(); // без аргументов
     ```
 
 2. Инициализируем его.
@@ -36,7 +36,7 @@
 
     - `method` -- метод HTTP. Обчно `"GET"` или `"POST"`.
     - `URL` -- URL запроса.
-    - `async` -- если преднамеренно установлено в `false`, тогда запрос будет синхронный. Вернемся к этому не много позже.
+    - `async` -- если преднамеренно установлено в `false`, тогда запрос будет синхронный. Вернемся к этому немного позже.
     - `user`, `password` -- логин и пароль для базовой аутентификации HTTP (если необходимо).
     
     Пожалуйста обратите внимание, что вызов `open`, что противоположно его имени, не открывает соединение. Он только настраивает запрос. А сетевая активность начинается после вызова `send`.
@@ -49,14 +49,13 @@
 
     Это метод открывает соединение и посылает запрос к серверу. В необязательном параметре `body` можно передать тело запроса. 
 
-    Некоторые методы запроса, такие как `GET`, не именно не имеют тела. И некоторыее из них, такие как `POST`, используют `body` для отправки данных на сервер. Примеры будет приведены позже. 
+    Некоторые методы запроса, такие как `GET`, не имеют тела. И некоторые из них, такие как `POST`, используют `body` для отправки данных на сервер. Примеры будет приведены позже. 
 
 4. Слушаем события запроса.
 
     Эти три наиболее широко используемые:
     - `load` -- когда результат, который включает ошибки HTTP, такие как 404,  - готов.
-    - `error` -- когда невозожно было выполнить запрос, например, упла сеть или URL - неверный.
-    - `progress` -- triggers periodically during the download, reports how much downloaded.
+    - `error` -- когда невозожно было выполнить запрос, например, упала сеть или URL - неверный.
     - `progress` -- переодически срабатывает в процессе загрузки, отчитывается о том, как много загружено.
 
     ```js
@@ -76,8 +75,6 @@
     };
     ```
 
-Here's a full example. The code below loads the URL at `/article/xmlhttprequest/example/load` from the server and prints the progress:
-
 Вот полный пример. Код ниже загружает URL `/article/xmlhttprequest/example/load` с сервера и показывает статус прогреса:
 
 ```js run
@@ -87,7 +84,7 @@ let xhr = new XMLHttpRequest();
 // 2. Настраиваем его: GET-запрос для URL /article/.../load
 xhr.open('GET', '/article/xmlhttprequest/example/load');
 
-// 3. Посылаем этот запро по сети
+// 3. Посылаем этот запрос по сети
 xhr.send();
 
 // 4. Это будет вызвано после получения ответа
@@ -124,8 +121,6 @@ xhr.onerror = function() {
 `response` (старые скрипты могу использовать `responseText`)
 : Ответ от серера.
 
-If we changed our mind, we can terminate the request at any time. The call to `xhr.abort()` does that:
-
 Если мы передумали, мы можем завершить запрос в любое время. Вызов `xhr.abort()` сделает это:
 
 ```js
@@ -142,18 +137,18 @@ xhr.timeout = 10000; // время ожидания указывется в ms, 
 
 Если запрос не успел отработать за отведенное время, тогда он отменяется и срабатывает событие `timeout`.
 
-## Response Type
+## Тип ответа
 
-We can use `xhr.responseType` property to set the response format:
+Мы можем использовать свойство `xhr.responseType` для установки формата ответа:
 
-- `""` (default) -- get as string,
-- `"text"` -- get as string,
-- `"arraybuffer"` -- get as `ArrayBuffer` (for binary data, see chapter <info:arraybuffer-and-views>),
-- `"blob"` -- get as `Blob` (for binary data, see chapter <info:blob>),
-- `"document"` -- get as XML document (can use XPath and other XML methods),
-- `"json"` -- get as JSON (parsed automatically).
+- `""` (по умолчанию) -- получить строку,
+- `"text"` -- получить строку,
+- `"arraybuffer"` -- покучить как `ArrayBuffer` (для двоихных данных, см. главу <info:arraybuffer-and-views>),
+- `"blob"` -- покучить как `Blob` (для двоихных данных, см. главу <info:blob>),
+- `"document"` -- покучить как документ XML (допускается использование XPath и методов XML),
+- `"json"` -- покучить как JSON (разбирается автоматически).
 
-For example, let's get the response as JSON:
+Например, давайте получим ответ как JSON:
 
 ```js run
 let xhr = new XMLHttpRequest();
@@ -166,59 +161,59 @@ xhr.responseType = 'json';
 
 xhr.send();
 
-// the response is {"message": "Hello, world!"}
+// the response is {"message": "Привет, мир!"}
 xhr.onload = function() {
   let responseObj = xhr.response;
-  alert(responseObj.message); // Hello, world!
+  alert(responseObj.message); // Привет, мир!
 };
 ```
 
 ```smart
-In the old scripts you may also find `xhr.responseText` and even `xhr.responseXML` properties.
+В старых скрипта можно найти свойство `xhr.responseText` и даже `xhr.responseXML`.
 
-They exist for historical reasons, to get either a string or XML document. Nowadays, we should set the format in `xhr.responseType` and get `xhr.response` as demonstrated above.
+Они существуют по историческим причинам, для получаения сторки или документа XML. Сейчас необходимо устанавливать формат в `xhr.responseType` и получать `xhr.response`, как показано выше.
 ```
 
-## Ready states
+## Состояния готовности
 
-`XMLHttpRequest` changes between states as it progresses. The current state is accessible as  `xhr.readyState`.
+`XMLHttpRequest` меняет свое состояние в процессе работы. Текущее состояние доступно как `xhr.readyState`.
 
-All states, as in [the specification](https://xhr.spec.whatwg.org/#states):
+Все состония, как в [спецификации](https://xhr.spec.whatwg.org/#states):
 
 ```js
-UNSENT = 0; // initial state
-OPENED = 1; // open called
-HEADERS_RECEIVED = 2; // response headers received
-LOADING = 3; // response is loading (a data packed is received)
-DONE = 4; // request complete
+UNSENT = 0; // изначальное состояние
+OPENED = 1; // вызван метод open
+HEADERS_RECEIVED = 2; // получены заголовки ответа
+LOADING = 3; // запрос в процессе загрузки (получен пакет данных)
+DONE = 4; // запрос завершился
 ```
 
-An `XMLHttpRequest` object travels them in the order `0` -> `1` -> `2` -> `3` -> ... -> `3` -> `4`. State `3` repeats every time a data packet is received over the network.
+Объект `XMLHttpRequest` меняет их в порядке `0` -> `1` -> `2` -> `3` -> ... -> `3` -> `4`. Состояние `3` повторяется каждый раз, когда по сети приходит пакет данных.
 
-We can track them using `readystatechange` event:
+Мы можем отследить их используя событие `readystatechange`:
 
 ```js
 xhr.onreadystatechange = function() {
   if (xhr.readyState == 3) {
-    // loading
+    // загрузка
   }
   if (xhr.readyState == 4) {
-    // request finished
+    // запрос закончился
   }
 };
 ```
 
-You can find `readystatechange` listeners in really old code, for historical reasons.
+В очень старом коде можно найти слушателей `readystatechange`, по историческим причинам.
 
-Nowadays, `load/error/progress` handlers deprecate it.
+На данный момент обработчики `load/error/progress` выступают вместо этох состояний.
 
-## Synchronous requests
+## Синхронные запросы
 
-If in the `open` method the third parameter `async` is set to `false`, the request is made synchronously.
+Если в методе `open` третьим параметром, называемым `async`, передать `false`, то запрос будет синхронный.
 
-In other words, Javascript execution pauses at `send()` and resumes when the response is received. Somewhat like `alert` or `prompt` commands.
+Другими словами, выполнение JavaScript приостанаваливается и возобновляется только тогда, когда ответ будет получен. Подобно тому, как это делают команды `alert` и `prompt`
 
-Here's the rewritten example, the 3rd parameter of `open` is `false`:
+Вот переписанный пример, третий парамерт `open` равен `false`
 
 ```js
 let xhr = new XMLHttpRequest();
@@ -232,68 +227,68 @@ try {
   } else {
     alert(xhr.response);
   }
-} catch(err) { // instead of onerror
-  alert("Request failed");
+} catch(err) { // вместо onerror
+  alert("Запрос не удался");
 };
 ```
 
-It might look good, but synchronous calls are used rarely, because they block in-page Javascript till the loading is complete. In some browsers it becomes impossible to scroll. If a synchronous call takes too much time, the browser may suggest to close the "hanging" webpage.
+Это может выглядень хорошо, но синхронные вызовы используются редко потому, что они блокинуют внутристраничный JavaScript, пока загрузка не будет завершена. В некоторых браузерах становится невозможо прокручивать страницу. Если синхронный запрос происходит долго, то браузер может предложить закрыть "зависшую" страницу.
 
-Many advanced capabilities of `XMLHttpRequest`, like requesting from another domain or specifying a timeout, are unavailable for synchronous requests. Also, as you can see, no progress indication.
+Много продвинутых возможностей `XMLHttpRequest`, такие как запрос с другого домента или определенное время ожидания, недоступны для синхронных запросов. Также, как вы можете видеть, индикация процесса загрузки.
 
-Because of all that, synchronous requests are used very sparingly, almost never. We won't talk about them any more.
+Исходя их всего этого, синхронные запросы используются очень редко, почти никогда. В дальнейшем не будем возвращаться к ним.
 
-## HTTP-headers
+## Заголовки HTTP
 
-`XMLHttpRequest` allows both to send custom headers and read headers from the response.
+`XMLHttpRequest` позволяет как посылать пользовательские заголовки, так и читать заголовки ответа. 
 
-There are 3 methods for HTTP-headers:
+Есть 3 метода для заголовков HTTP:
 
 `setRequestHeader(name, value)`
-: Sets the request header with the given `name` and `value`.
+: Устанавливает заголовок запроса, используя данные `name` и `value`.
 
-    For instance:
+    Например:
 
     ```js
     xhr.setRequestHeader('Content-Type', 'application/json');
     ```
 
     ```warn header="Headers limitations"
-    Several headers are managed exclusively by the browser, e.g. `Referer` and `Host`.
-    The full list is [in the specification](http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader-method).
+    Некоторые заголовки управляются исключительно браузером. Такие как `Referer` и `Host`.
+    Полный список [в спецификации](http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader-method).
 
-    XMLHttpRequest is not allowed to change them, for the sake of user safety and correctness of the request.
+    XMLHttpRequest не может менять их из-за соображений пользовательской безопасности и точности запроса.
     ```
 
-    ````warn header="Can't remove a header"
-    Another peciliarity of `XMLHttpRequest` is that one can't undo `setRequestHeader`.
+    ````warn header="Не возможно удалить заголовок"
+    Другая особенность `XMLHttpRequest` - он не может изменить заголовки, устрановленные в `setRequestHeader`.
 
-    Once the header is set, it's set. Additional calls add information to the header, don't overwrite it.
+    Как только заголовок установлен, не получится его изменить. Дополнительные вызовы добавляют информацию к заголовку, но не перезаписывают ее.
 
-    For instance:
+    Например:
 
     ```js
     xhr.setRequestHeader('X-Auth', '123');
     xhr.setRequestHeader('X-Auth', '456');
 
-    // the header will be:
+    // заголовок будет:
     // X-Auth: 123, 456
     ```
     ````
 
 `getResponseHeader(name)`
-: Gets the response header with the given `name` (except `Set-Cookie` and `Set-Cookie2`).
+: Получает заголовок ответа с данным `name` (кроме `Set-Cookie` и `Set-Cookie2`).
 
-    For instance:
+    Например:
 
     ```js
     xhr.getResponseHeader('Content-Type')
     ```
 
 `getAllResponseHeaders()`
-: Returns all response headers, except `Set-Cookie` and `Set-Cookie2`.
+: Возвращает все заголовки ответ, кроме `Set-Cookie` и `Set-Cookie2`.
 
-    Headers are returned as a single line, e.g.:
+    Залоговки возвращаются как единственная строка. Например:
 
     ```
     Cache-Control: max-age=31536000
@@ -302,11 +297,11 @@ There are 3 methods for HTTP-headers:
     Date: Sat, 08 Sep 2012 16:53:16 GMT
     ```
 
-    The line break between headers is always `"\r\n"` (doesn't depend on OS), so we can easily split it into individual headers. The separator between the name and the value is always a colon followed by a space `": "`. That's fixed in the specification.
+    Перевод строки между заголовкими всегда - `"\r\n"` (не зависит от ОС) так, чтобы можно было легко разделить на отдельные заголовки. Разделитель можду названием и значением - всегда двоеточие, за которым идет пробел, `": "`. Это зафиксированно в спецификацияи.
+    
+    Итак, если мы хотим получить объект с парами ключ/значение, надо применить немного JS.
 
-    So, if we want to get an object with name/value pairs, we need to throw in a bit JS.
-
-    Like this (assuming that if two headers have the same name, then the latter one overwrites the former one):
+    Как это (при условии, что если два заголовка с одинаковыми именами, тогда письмо перезаписывает предыдущее):
 
     ```js
     let headers = xhr
@@ -321,21 +316,22 @@ There are 3 methods for HTTP-headers:
 
 ## POST, FormData
 
-To make a POST request, we can use the built-in [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object.
+Чтобы сделать запрос POST, можно использовать встроенный объект [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData).
 
-The syntax:
+Синтаксис:
 
 ```js
-let formData = new FormData([form]); // creates an object, optionally fill from <form>
-formData.append(name, value); // appends a field
+let formData = new FormData([form]); // создает объект, можно заполнить форму <form>
+formData.append(name, value); // добавляет поле
 ```
 
 Create it, optionally from a form, `append` more fields if needed, and then:
+Создайте объект, как вариант из формы. Если необходимо, добавьте больше полей. И далее:
 
-1. `xhr.open('POST', ...)` – use `POST` method.
-2. `xhr.send(formData)` to submit the form to the server.
+1. `xhr.open('POST', ...)` – используте метод `POST`.
+2. `xhr.send(formData)` для отравки формы на серве.
 
-For instance:
+Для примера:
 
 ```html run
 <form name="person">
@@ -344,26 +340,24 @@ For instance:
 </form>
 
 <script>
-  // pre-fill FormData from the form
+  // предзаполняем объект FormData из данных формы
   let formData = new FormData(document.forms.person);
 
-  // add one more field
+  // добавляем еще одно поле
   formData.append("middle", "Lee");
 
-  // send it out
+  // высылаем
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "/article/xmlhttprequest/post/user");
   xhr.send(formData);
-
-  xhr.
 </script>
 ```
 
-The form is sent with `multipart/form-data` encoding.
+Форма полсана способ кодировки `multipart/form-data`.
 
-Or, if we like JSON more, then `JSON.stringify` and send as a string.
+Или, если мы продпочитаем JSON, используем `JSON.stringify` и посылаем как строку.
 
-Just don't forget to set the header `Content-Type: application/json`, many server-side frameworks automatically decode JSON with it:
+Только не забываем установить заголовок `Content-Type: application/json`. Много сервных фреймворков автоматически декодируют JSON вот так:
 
 ```js
 let xhr = new XMLHttpRequest();
@@ -379,45 +373,46 @@ xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 xhr.send(json);
 ```
 
-The `.send(body)` method is pretty omnivore. It can send almost everything, including Blob and BufferSource objects.
+Метод `.send(body)` - достаточно всеяден. Он может слать почи все, включая объекты Blob и BufferSource. 
 
-## Upload progress
+## Прогресс загрузки
 
-The `progress` event only works on the downloading stage.
+Событие `progress` работает только на стадии загрузки.
 
-That is: if we `POST` something, `XMLHttpRequest` first uploads our data, then downloads the response.
+Если мы шлем что-то используя `POST`, `XMLHttpRequest` сперва загрузит наши данные, затем загрузки ответ.
 
-If we're uploading something big, then we're surely more interested in tracking the upload progress. But `progress` event doesn't help here.
+Если загружаем что-то большое, тогда мы вероятнее всего заинтересованы в отслеживании прогресса загрузки. Но событие `progress` не помогает здесь.
 
-There's another object `xhr.upload`, without methods, exclusively for upload events.
+Есть другой объект - `xhr.upload`, без методов, исключительно для событий загрузки.
 
-Here's the list:
+Вот список:
 
-- `loadstart` -- upload started.
+- `loadstart` -- началась загрузка.
 - `progress` -- triggers periodically during the upload.
-- `abort` -- upload aborted.
-- `error` -- non-HTTP error.
-- `load` -- upload finished successfully.
-- `timeout` -- upload timed out (if `timeout` property is set).
-- `loadend` -- upload finished with either success or error.
+- `progress` -- переодически срабатывает в процессе заргузки.
+- `abort` -- загрузка прервана.
+- `error` -- ошибка не на уровне HTTP.
+- `load` -- загрузка завершилась успешно.
+- `timeout` -- всемя загрузки истекло (если было установлено свойство `timeout`).
+- `loadend` -- загрузка закончилась либо успешно, либо с ошибкой.
 
-Example of handlers:
+Примеры обработчиков:
 
 ```js
 xhr.upload.onprogress = function(event) {
-  alert(`Uploaded ${event.loaded} of ${event.total} bytes`);
+  alert(`Загружено ${event.loaded} байт из ${event.total}`);
 };
 
 xhr.upload.onload = function() {
-  alert(`Upload finished successfully.`);
+  alert(`Загрузка завершилась успешно.`);
 };
 
 xhr.upload.onerror = function() {
-  alert(`Error during the upload: ${xhr.status}`);
+  alert(`Ошибка в процессе загрузки: ${xhr.status}`);
 };
 ```
 
-Here's a real-life example: file upload with progress indication:
+Наже приведен пример из реальной жизни: загрузка файл с отображением прогресса:
 
 ```html run
 <input type="file" onchange="upload(this.files[0])">
@@ -426,19 +421,19 @@ Here's a real-life example: file upload with progress indication:
 function upload(file) {
   let xhr = new XMLHttpRequest();
 
-  // track upload progress
+  // отслеживаем прогресс загрузки
 *!*
   xhr.upload.onprogress = function(event) {
-    console.log(`Uploaded ${event.loaded} of ${event.total}`);
+    console.log(`Загружено ${event.loaded} из ${event.total}`);
   };
 */!*
 
-  // track completion: both successful or not
+  // отслеживаем выполнение: успешно или нет
   xhr.onloadend = function() {
     if (xhr.status == 200) {
-      console.log("success");
+      console.log("успех");
     } else {
-      console.log("error " + this.status);
+      console.log("ошибка " + this.status);
     }
   };
 
@@ -448,11 +443,11 @@ function upload(file) {
 </script>
 ```
 
-## Cross-origin requests
+## Запрос между источкиками (cross-origin)
 
-`XMLHttpRequest` can make cross-domain requests, using the same CORS policy as [fetch](info:fetch-crossorigin).
+`XMLHttpRequest` может делать междоменные запросы, использу политику CORS как [fetch](info:fetch-crossorigin).
 
-Just like `fetch`, it doesn't send cookies and HTTP-authorization to another origin by default. To enable them, set `xhr.withCredentials` to `true`:
+Так же как и `fetch`, по-умолчаню он не может слать куки и авторизацию HTTP на другой источник. Чтобы включить это, установите `xhr.withCredentials` в `true`.
 
 ```js
 let xhr = new XMLHttpRequest();
@@ -465,49 +460,50 @@ xhr.open('POST', 'http://anywhere.com/request');
 ```
 
 
-## Summary
+## Резюме
 
-Typical code of the GET-request with `XMLHttpRequest`:
+Типичный код запроса GET используя `XMLHttpRequest`:
 
 ```js
 let xhr = new XMLHttpRequest();
 
 xhr.open('GET', '/my/url');
 
-xhr.send(); // for POST, can send a string or FormData
+xhr.send(); // для POST, может слать строку или данные формы 
 
 xhr.onload = function() {
-  if (xhr.status != 200) { // HTTP error?
-    // handle error
-    alert( 'Error: ' + xhr.status);
+  if (xhr.status != 200) { // ошибка HTTP?
+    // обработать ошибку
+    alert( 'Ошибка: ' + xhr.status);
     return;
   }
 
-  // get the response from xhr.response
+  // получить ответ из xhr.response
 };
 
 xhr.onprogress = function(event) {
-  // report progress
-  alert(`Loaded ${event.loaded} of ${event.total}`);
+  // отчет о прогрессе
+  alert(`Загружено ${event.loaded} из ${event.total}`);
 };
 
 xhr.onerror = function() {
-  // handle non-HTTP error (e.g. network down)
+  // обработать ошибку не уровня HTTP (такую как падение сети)
 };
 ```
 
 There are actually more events, the [modern specification](http://www.w3.org/TR/XMLHttpRequest/#events) lists them (in the lifecycle order):
+В общем, существует больше событий. В [современной спецификации](http://www.w3.org/TR/XMLHttpRequest/#events) перечисленные все (в порядке времени существования).
 
-- `loadstart` -- the request has started.
-- `progress` -- a data packet of the response has arrived, the whole response body at the moment is in `responseText`.
-- `abort` -- the request was canceled by the call `xhr.abort()`.
-- `error` -- connection error has occured, e.g. wrong domain name. Doesn't happen for HTTP-errors like 404.
-- `load` -- the request has finished successfully.
-- `timeout` -- the request was canceled due to timeout (only happens if it was set).
-- `loadend` -- the request has finished (succeffully or not).
+- `loadstart` -- запрос начался.
+- `progress` -- прибыл пакет данных ответа, все тело ответа в этот момент находится в `responseText`.
+- `abort` -- запрос был отменен вызовом `xhr.abort()`.
+- `error` -- произошка ошибка соединения, такая как неверное доменное имя. Не срабатывает при ошибках HTTP, например, 404.
+- `load` -- запрос выполнен успешно.
+- `timeout` -- запрос был отменен в следствии тайм-аута (происходит, если это было установлено).
+- `loadend` -- запрос выполнен (успешно или нет).
 
-The most used events are load completion (`load`), load failure (`error`), and also `progress` to track the progress.
+Самые используемые события - это завершение загрузки (`load`), ошибка загрузки (`error`), а также `progress` для отслеживания прогресса.
 
-We've already seen another event: `readystatechange`. Historically, it appeared long ago, before the specification settled. Nowadays, there's no need to use it, we can replace it with newer events, but it can often be found in older scripts.
+Мы уже вижели другое событие: `readystatechange`. Исторически, оно появлось давно, перед тем, как спецификация устоялась. В наше время нет нужды использовать его. Можно заменить его более новыми событиями, но все же оно может быть найдено в старых скрипта.
 
-If we need to track uploading specifically, then we should listen to same events on `xhr.upload` object.
+Если необходимо отслеживать именно загрузку, то нужно слушать то же событие на объекте `xhr.upload`.
